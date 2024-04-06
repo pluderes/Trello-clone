@@ -1,7 +1,5 @@
-import { cyan, deepOrange, orange, teal } from "@mui/material/colors";
 import { experimental_extendTheme as extendTheme } from "@mui/material/styles";
 
-<<<<<<< Updated upstream
 // Create a theme instance.
 const theme = extendTheme({
   colorSchemes: {
@@ -9,7 +7,6 @@ const theme = extendTheme({
       palette: {
         primary: teal,
         secondary: deepOrange,
-=======
 const APP_BAR_HEIGHT = "58px";
 const BOARD_BAR_HEIGHT = "60px";
 const BOARD_CONTENT_HEIGHT = `calc(100vh - (${BOARD_BAR_HEIGHT} + ${APP_BAR_HEIGHT}))`;
@@ -59,13 +56,43 @@ const theme = extendTheme({
             backgroundColor: "white",
           },
         },
->>>>>>> Stashed changes
       },
     },
-    dark: {
-      palette: {
-        primary: cyan,
-        secondary: orange,
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+          borderWidth: "1px",
+          "&:hover": {
+            borderWidth: "3px !important",
+          },
+          "&:focused": {
+            borderWidth: "3px !important",
+          },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          fontSize: "0.875rem",
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          fontSize: "0.875rem",
+          "& fieldset": {
+            borderWidth: "1px !important",
+          },
+          "&:hover fieldset": {
+            borderWidth: "3px !important",
+          },
+          "&:focused fieldset": {
+            borderWidth: "3px !important",
+          },
+        },
       },
     },
   },
