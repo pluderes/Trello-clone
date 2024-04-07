@@ -1,12 +1,5 @@
 import { experimental_extendTheme as extendTheme } from "@mui/material/styles";
 
-// Create a theme instance.
-const theme = extendTheme({
-  colorSchemes: {
-    light: {
-      palette: {
-        primary: teal,
-        secondary: deepOrange,
 const APP_BAR_HEIGHT = "58px";
 const BOARD_BAR_HEIGHT = "60px";
 const BOARD_CONTENT_HEIGHT = `calc(100vh - (${BOARD_BAR_HEIGHT} + ${APP_BAR_HEIGHT}))`;
@@ -64,10 +57,10 @@ const theme = extendTheme({
           textTransform: "none",
           borderWidth: "1px",
           "&:hover": {
-            borderWidth: "3px !important",
+            borderWidth: "2px !important",
           },
           "&:focused": {
-            borderWidth: "3px !important",
+            borderWidth: "2px !important",
           },
         },
       },
