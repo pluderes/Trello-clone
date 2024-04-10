@@ -6,8 +6,10 @@ import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import VpnLockIcon from "@mui/icons-material/VpnLock";
 import { Avatar, AvatarGroup, Box, Button, Chip, Tooltip } from "@mui/material";
 import React from "react";
+import { uppercaseFirstLetter } from "~/utils/helper";
 
-function BoardBar() {
+function BoardBar(props) {
+  const { board } = props;
   const menuStype = {
     backgroundColor: "transparent",
     color: "white",
@@ -46,13 +48,13 @@ function BoardBar() {
       >
         <Chip
           icon={<DashboardIcon />}
-          label="Trolle board"
+          label={board?.title}
           clickable
           sx={menuStype}
         />
         <Chip
           icon={<VpnLockIcon />}
-          label="Public/Private workspace"
+          label={uppercaseFirstLetter(board?.type)}
           clickable
           sx={menuStype}
         />

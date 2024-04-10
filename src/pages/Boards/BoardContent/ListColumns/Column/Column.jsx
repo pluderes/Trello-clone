@@ -18,13 +18,24 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import React, { useState } from "react";
 import ListCards from "./ListCards/ListCards";
+import { sortedArray } from "~/utils/helper";
 
-function Column() {
+function Column(props) {
+  const { columns } = props;
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const listColumnSorted = sortedArray(
+    columns?.cards,
+    columns?.cardOrderIds,
+    "_id"
+  );
+
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -58,7 +69,7 @@ function Column() {
             cursor: "pointer",
           }}
         >
-          Column title
+          {columns?.title}
         </Typography>
         <Box>
           <Tooltip title="More action">
@@ -120,10 +131,8 @@ function Column() {
           </Menu>
         </Box>
       </Box>
-
       {/* Box column content */}
-      <ListCards />
-
+      <ListCards cards={listColumnSorted} />
       {/* Box column footer */}
       <Box
         sx={{
