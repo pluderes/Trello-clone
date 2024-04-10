@@ -2,7 +2,8 @@ import { Box } from "@mui/material";
 import React from "react";
 import CardItem from "./CardItem/CardItem";
 
-function ListCards() {
+function ListCards(props) {
+  const { cards } = props;
   return (
     <Box
       sx={{
@@ -20,8 +21,9 @@ function ListCards() {
         ${theme.trolle.cardFooterHeight})`,
       }}
     >
-      <CardItem />
-      <CardItem temporaryHideMedia />
+      {cards?.map((item, index) => (
+        <CardItem key={index} detailCard={item} />
+      ))}
     </Box>
   );
 }

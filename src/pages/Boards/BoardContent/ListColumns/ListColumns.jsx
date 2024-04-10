@@ -3,7 +3,8 @@ import React from "react";
 import Column from "./Column/Column";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
 
-function ListColumns() {
+function ListColumns(props) {
+  const { boardColumns } = props;
   return (
     <Box
       sx={{
@@ -18,8 +19,9 @@ function ListColumns() {
         },
       }}
     >
-      <Column />
-
+      {boardColumns?.map((item, index) => (
+        <Column key={index} columns={item} />
+      ))}
       {/* Box add new column */}
       <Box
         sx={{
