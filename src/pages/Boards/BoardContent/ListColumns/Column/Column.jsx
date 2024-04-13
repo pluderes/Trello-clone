@@ -19,10 +19,21 @@ import ListItemText from "@mui/material/ListItemText";
 import React, { useState } from "react";
 import ListCards from "./ListCards/ListCards";
 import { sortedArray } from "~/utils/helper";
+import { CSS } from "@dnd-kit/utilities";
+import { useSortable } from "@dnd-kit/sortable";
 
 function Column(props) {
   const { columns } = props;
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: columns._id, data: { ...columns } });
+
+  const styleDND = {
+    // TouchAction: "none", // fix if use pointerSensor
+    transform: CSS.Translate.toString(transform),
+    transition,
+  };
 
   const listColumnSorted = sortedArray(
     columns?.cards,
@@ -52,6 +63,10 @@ function Column(props) {
         maxHeight: (theme) =>
           `calc(${theme.trolle.boardContentHeight} - ${theme.spacing(5)})`,
       }}
+      ref={setNodeRef}
+      style={styleDND}
+      {...attributes}
+      {...listeners}
     >
       {/* Box column header */}
       <Box
