@@ -26,13 +26,21 @@ function Column(props) {
   const { columns } = props;
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: columns._id, data: { ...columns } });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: columns._id, data: { ...columns } });
 
   const styleDND = {
     // TouchAction: "none", // fix if use pointerSensor
     transform: CSS.Translate.toString(transform),
     transition,
+    height: "100%",
+    opacity: isDragging ? "50%" : undefined,
   };
 
   const listColumnSorted = sortedArray(
@@ -52,118 +60,117 @@ function Column(props) {
   };
 
   return (
-    <Box
-      sx={{
-        width: "300px",
-        bgcolor: (theme) =>
-          theme.palette.mode == "dark" ? "#333643" : "#ebecf0",
-        ml: 2,
-        borderRadius: "6px",
-        height: "fit-content",
-        maxHeight: (theme) =>
-          `calc(${theme.trolle.boardContentHeight} - ${theme.spacing(5)})`,
-      }}
-      ref={setNodeRef}
-      style={styleDND}
-      {...attributes}
-      {...listeners}
-    >
-      {/* Box column header */}
+    <div ref={setNodeRef} style={styleDND} {...attributes}>
       <Box
         sx={{
-          height: (theme) => theme.trolle.cardHeaderHeight,
-          padding: 2,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          width: "300px",
+          bgcolor: (theme) =>
+            theme.palette.mode == "dark" ? "#333643" : "#ebecf0",
+          ml: 2,
+          borderRadius: "6px",
+          height: "fit-content",
+          maxHeight: (theme) =>
+            `calc(${theme.trolle.boardContentHeight} - ${theme.spacing(5)})`,
         }}
+        {...listeners}
       >
-        <Typography
+        {/* Box column header */}
+        <Box
           sx={{
-            fontWeight: "bold",
-            cursor: "pointer",
+            height: (theme) => theme.trolle.cardHeaderHeight,
+            padding: 2,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          {columns?.title}
-        </Typography>
-        <Box>
-          <Tooltip title="More action">
-            <ExpandMoreIcon
-              sx={{ color: "text.primary", cursor: "pointer" }}
-              id="basic-button"
-              aria-controls={open ? "basic-menu-column-dropdown" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              onClick={handleClick}
-            />
-          </Tooltip>
-          <Menu
-            id="basic-column-dropdown"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
+          <Typography
+            sx={{
+              fontWeight: "bold",
+              cursor: "pointer",
             }}
           >
-            <MenuItem>
-              <ListItemIcon>
-                <AddCardIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Add new card</ListItemText>
-            </MenuItem>
-            <MenuItem>
-              <ListItemIcon>
-                <ContentCut fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Cut</ListItemText>
-            </MenuItem>
-            <MenuItem>
-              <ListItemIcon>
-                <ContentCopy fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Copy</ListItemText>
-            </MenuItem>
-            <MenuItem>
-              <ListItemIcon>
-                <ContentPaste fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Paste</ListItemText>
-            </MenuItem>
-            <Divider />
-            <MenuItem>
-              <ListItemIcon>
-                <DeleteIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Remove this column</ListItemText>
-            </MenuItem>
-            <MenuItem>
-              <ListItemIcon>
-                <Cloud fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Archive this column</ListItemText>
-            </MenuItem>
-          </Menu>
+            {columns?.title}
+          </Typography>
+          <Box>
+            <Tooltip title="More action">
+              <ExpandMoreIcon
+                sx={{ color: "text.primary", cursor: "pointer" }}
+                id="basic-button"
+                aria-controls={open ? "basic-menu-column-dropdown" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+              />
+            </Tooltip>
+            <Menu
+              id="basic-column-dropdown"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <MenuItem>
+                <ListItemIcon>
+                  <AddCardIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Add new card</ListItemText>
+              </MenuItem>
+              <MenuItem>
+                <ListItemIcon>
+                  <ContentCut fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Cut</ListItemText>
+              </MenuItem>
+              <MenuItem>
+                <ListItemIcon>
+                  <ContentCopy fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Copy</ListItemText>
+              </MenuItem>
+              <MenuItem>
+                <ListItemIcon>
+                  <ContentPaste fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Paste</ListItemText>
+              </MenuItem>
+              <Divider />
+              <MenuItem>
+                <ListItemIcon>
+                  <DeleteIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Remove this column</ListItemText>
+              </MenuItem>
+              <MenuItem>
+                <ListItemIcon>
+                  <Cloud fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Archive this column</ListItemText>
+              </MenuItem>
+            </Menu>
+          </Box>
+        </Box>
+        {/* Box column content */}
+        <ListCards cards={listColumnSorted} />
+        {/* Box column footer */}
+        <Box
+          sx={{
+            height: (theme) => theme.trolle.cardFooterHeight,
+            padding: 2,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Button startIcon={<AddCardIcon />}>Add new card</Button>
+          <Tooltip title="Drag to move">
+            <DragHandleIcon sx={{ cursor: "pointer" }} />
+          </Tooltip>
         </Box>
       </Box>
-      {/* Box column content */}
-      <ListCards cards={listColumnSorted} />
-      {/* Box column footer */}
-      <Box
-        sx={{
-          height: (theme) => theme.trolle.cardFooterHeight,
-          padding: 2,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Button startIcon={<AddCardIcon />}>Add new card</Button>
-        <Tooltip title="Drag to move">
-          <DragHandleIcon sx={{ cursor: "pointer" }} />
-        </Tooltip>
-      </Box>
-    </Box>
+    </div>
   );
 }
 
