@@ -39,11 +39,11 @@ function CardItem(props) {
     border: isDragging ? "1px solid #E72929" : undefined,
   };
 
-  const listCardSorted = sortedArray(
-    detailCard?.cards,
-    detailCard?.cardOrderIds,
-    "_id"
-  );
+  // const listCardSorted = sortedArray(
+  //   detailCard?.cards,
+  //   detailCard?.cardOrderIds,
+  //   "_id"
+  // );
 
   return (
     <Card
