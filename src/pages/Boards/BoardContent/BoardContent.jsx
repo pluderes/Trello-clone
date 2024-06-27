@@ -17,6 +17,7 @@ import {
 import { arrayMove } from "@dnd-kit/sortable";
 import Column from "./ListColumns/Column/Column";
 import CardItem from "./ListColumns/Column/ListCards/CardItem/CardItem";
+import { cloneDeep } from "lodash";
 
 const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: "ACTIVE_DRAG_ITEM_TYPE_COLUMN",
@@ -68,8 +69,71 @@ function BoardContent(props) {
     setActiveDragItemData(event?.active?.data?.current);
   };
 
+  const hadnleDragOver = (event) => {
+    const { active, over } = event;
+
+    if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) return;
+
+    if (!active || !over) return;
+
+    const {
+      id: activeCardId,
+      data: { current: activeDragCardData },
+    } = active;
+    const { id: overCardId } = over;
+
+    const activeColumn = findColumnByCardId(activeCardId);
+    const overColumn = findColumnByCardId(overCardId);
+
+    if (!activeColumn || !overColumn) return;
+
+    if (activeColumn?._id !== overColumn?._id) {
+      setSortedColumn((prevState) => {
+        const overCardIndex = overColumn?.cards?.findIndex(
+          (card) => card?._id === overCardId
+        );
+        let newCardindex;
+        const isBelowOverItem =
+          active.rect.current.translated &&
+          active.rect.current.translated.top > over.rect.top + over.rect.height;
+        const modifier = isBelowOverItem ? 1 : 0;
+        newCardindex =
+          overCardIndex >= 0
+            ? overCardIndex + modifier
+            : overColumn?.card?.length + 1;
+
+        const nextColumns = cloneDeep(prevState);
+        const nextActiveColumns = nextColumns?.find((column) => column?._id === activeColumn?._id);
+        const nextOverColumns = nextColumns?.find((column) => column?._id === overColumn?._id);
+
+        if (nextActiveColumns) {
+          nextActiveColumns.cards = nextActiveColumns?.cards?.filter((item) => item?._id !== activeDragItemId);
+          nextActiveColumns.cardOrderIds = nextActiveColumns?.cards?.map((item) => item?._id);
+        }
+
+        if (nextOverColumns) {
+          nextOverColumns.cards = nextOverColumns?.cards?.filter((item) => item?._id !== activeDragItemId);
+          nextOverColumns.cards = nextOverColumns?.cards?.toSpliced(newCardindex, 0, activeDragCardData);
+          nextOverColumns.cardOrderIds = nextOverColumns?.cards?.map((item) => item?._id);
+        }
+        return nextColumns;
+      });
+    }
+  };
+
+  const findColumnByCardId = (cardId) => {
+    return sortedColumn?.find((column) =>
+      column?.cards?.map((card) => card?._id)?.includes(cardId)
+    );
+  };
+
   const handleDragEnd = (event) => {
     const { active, over } = event;
+
+    if (!active || !over) return;
+
+    if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) return;
+
     if (!over?.id) return;
 
     if (active?.id !== over?.id) {
@@ -97,6 +161,7 @@ function BoardContent(props) {
   return (
     <DndContext
       onDragStart={handleDragStart}
+      onDragOver={hadnleDragOver}
       onDragEnd={handleDragEnd}
       sensors={sensors}
     >

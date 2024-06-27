@@ -36,6 +36,7 @@ function CardItem(props) {
     transform: CSS.Translate.toString(transform),
     transition,
     opacity: isDragging ? "50%" : undefined,
+    border: isDragging ? "1px solid #E72929" : undefined,
   };
 
   const listCardSorted = sortedArray(
